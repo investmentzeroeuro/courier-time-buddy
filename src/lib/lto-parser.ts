@@ -30,6 +30,16 @@ export interface ParseResult {
 
 function findColumn(row: Record<string, unknown>, search: string): unknown {
   const s = search.toLowerCase();
+  // First try exact match
+  for (const key of Object.keys(row)) {
+    if (key.toLowerCase() === s) return row[key];
+  }
+  // Then try: key starts with search or search starts with key
+  for (const key of Object.keys(row)) {
+    const k = key.toLowerCase();
+    if (k.startsWith(s) || s.startsWith(k)) return row[key];
+  }
+  // Finally fallback to includes
   for (const key of Object.keys(row)) {
     if (key.toLowerCase().includes(s)) return row[key];
   }
